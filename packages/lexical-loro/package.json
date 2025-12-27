@@ -1,0 +1,49 @@
+{
+  "name": "@lexical/loro",
+  "description": "The library provides Loro editor bindings for Lexical.",
+  "keywords": [
+    "react",
+    "lexical",
+    "editor",
+    "rich-text",
+    "collaboration",
+    "loro",
+    "crdt"
+  ],
+  "license": "MIT",
+  "version": "0.39.0",
+  "main": "LexicalLoro.js",
+  "types": "index.d.ts",
+  "dependencies": {
+    "@lexical/offset": "0.39.0",
+    "@lexical/selection": "0.39.0",
+    "lexical": "0.39.0"
+  },
+  "peerDependencies": {
+    "loro-crdt": ">=1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/facebook/lexical.git",
+    "directory": "packages/lexical-loro"
+  },
+  "module": "LexicalLoro.mjs",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./index.d.ts",
+        "development": "./LexicalLoro.dev.mjs",
+        "production": "./LexicalLoro.prod.mjs",
+        "node": "./LexicalLoro.node.mjs",
+        "default": "./LexicalLoro.mjs"
+      },
+      "require": {
+        "types": "./index.d.ts",
+        "development": "./LexicalLoro.dev.js",
+        "production": "./LexicalLoro.prod.js",
+        "default": "./LexicalLoro.js"
+      }
+    }
+  }
+}
