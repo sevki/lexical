@@ -7,6 +7,7 @@
  * @flow strict
  */
 
+// $FlowFixMe[untyped-import]: loro-crdt not typed
 import type {LoroDoc} from 'loro-crdt';
 import type {
   DecoratorNode,
@@ -58,6 +59,34 @@ declare interface Provider {
 
 export type ClientID = string;
 
+// $FlowFixMe[unclear-type]: work around for internal
+export type LoroText = Object;
+// $FlowFixMe[unclear-type]: work around for internal
+export type LoroMap = Object;
+// $FlowFixMe[unclear-type]: work around for internal
+export type LoroUndoManager = Object;
+
+export type CursorSelection = {
+  anchor: {
+    key: NodeKey,
+    offset: number,
+  },
+  caret: HTMLElement,
+  color: string,
+  focus: {
+    key: NodeKey,
+    offset: number,
+  },
+  name: HTMLSpanElement,
+  selections: Array<HTMLElement>,
+};
+
+export type Cursor = {
+  color: string,
+  name: string,
+  selection: null | CursorSelection,
+};
+
 declare export function createBinding(
   editor: LexicalEditor,
   provider: Provider,
@@ -69,7 +98,7 @@ declare export function createBinding(
 declare export function createUndoManager(
   binding: BaseBinding,
   root: LoroDoc,
-): any;
+): LoroUndoManager;
 
 declare export function initLocalState(
   provider: Provider,
@@ -101,6 +130,7 @@ declare export function syncLexicalUpdateToLoro(
 declare export function syncLoroChangesToLexical(
   binding: Binding,
   provider: Provider,
+  // $FlowFixMe[unclear-type]: temp
   events: Array<any>,
   isFromUndoManger: boolean,
 ): void;
@@ -110,6 +140,7 @@ declare export var TOGGLE_CONNECT_COMMAND: LexicalCommand<boolean>;
 
 export type BaseBinding = {
   clientID: string,
+  // $FlowFixMe[unclear-type]: temp
   cursors: Map<ClientID, any>,
   cursorsContainer: null | HTMLElement,
   doc: LoroDoc,
@@ -122,7 +153,9 @@ export type BaseBinding = {
 
 export type Binding = {
   ...BaseBinding,
+  // $FlowFixMe[unclear-type]: temp
   collabNodeMap: Map<NodeKey, any>,
+  // $FlowFixMe[unclear-type]: temp
   root: any,
 };
 
