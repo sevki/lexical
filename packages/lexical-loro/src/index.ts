@@ -8,11 +8,12 @@
 
 import type {BaseBinding} from './Bindings';
 import type {LexicalCommand} from 'lexical';
-import type {LoroDoc, LoroUndoManager} from 'loro-crdt';
+import type {LoroDoc} from 'loro-crdt';
 
 import './types';
 
 import {createCommand} from 'lexical';
+import {UndoManager} from 'loro-crdt';
 
 export type UserState = {
   anchorPos: null | {key: string; offset: number};
@@ -75,9 +76,9 @@ export {createBinding} from './Bindings';
 export function createUndoManager(
   binding: BaseBinding,
   root: LoroDoc,
-): LoroUndoManager {
+): UndoManager {
   const doc = binding.doc;
-  return new doc.UndoManager();
+  return new UndoManager(doc, {});
 }
 
 export function initLocalState(
@@ -127,7 +128,6 @@ export {
   syncCursorPositions,
   type SyncCursorPositionsFn,
 } from './SyncCursors';
-
 export {
   syncLexicalUpdateToLoro,
   syncLoroChangesToLexical,

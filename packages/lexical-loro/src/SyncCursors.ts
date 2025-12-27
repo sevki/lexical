@@ -7,16 +7,9 @@
  */
 
 import type {Binding, Provider, UserState} from '.';
-import type {LexicalEditor, NodeKey, RangeSelection} from 'lexical';
-import type {LoroText} from 'loro-crdt';
+import type {NodeKey, RangeSelection} from 'lexical';
 
-import {
-  $createRangeSelection,
-  $getNodeByKey,
-  $getSelection,
-  $isRangeSelection,
-  $setSelection,
-} from 'lexical';
+import {$getSelection, $isRangeSelection} from 'lexical';
 
 import {CollabElementNode} from './CollabElementNode';
 
@@ -81,10 +74,8 @@ export function getAnchorAndFocusCollabNodesForUserState(
   const focus = collabNodeMap.get(focusPos.key);
 
   return {
-    anchor:
-      anchor instanceof CollabElementNode ? anchor : null,
-    focus:
-      focus instanceof CollabElementNode ? focus : null,
+    anchor: anchor instanceof CollabElementNode ? anchor : null,
+    focus: focus instanceof CollabElementNode ? focus : null,
   };
 }
 

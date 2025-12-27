@@ -8,7 +8,7 @@
 
 import type {Binding} from '.';
 import type {ElementNode, NodeKey, NodeMap} from 'lexical';
-import type {LoroText, LoroMap} from 'loro-crdt';
+import type {LoroText} from 'loro-crdt';
 
 import {$createChildrenArray} from '@lexical/offset';
 import {
@@ -17,7 +17,6 @@ import {
   $isDecoratorNode,
   $isElementNode,
   $isTextNode,
-  removeFromParent,
 } from 'lexical';
 import invariant from 'shared/invariant';
 
@@ -26,11 +25,7 @@ import {CollabLineBreakNode} from './CollabLineBreakNode';
 import {CollabTextNode} from './CollabTextNode';
 import {
   $createCollabNodeFromLexicalNode,
-  $getOrInitCollabNodeFromSharedType,
   $syncPropertiesFromLoro,
-  createLexicalNodeFromCollabNode,
-  getPositionFromElementAndOffset,
-  spliceString,
   syncPropertiesFromLexical,
 } from './Utils';
 
@@ -156,13 +151,13 @@ export class CollabElementNode {
       nextLexicalNode,
     );
 
-    const nextChildren = $createChildrenArray(nextLexicalNode, null);
-    const nextChildrenLength = nextChildren.length;
+    const nextChildrenKeys = $createChildrenArray(nextLexicalNode, null);
+    const nextChildrenLength = nextChildrenKeys.length;
     const collabNodeMap = binding.collabNodeMap;
 
     for (let i = 0; i < nextChildrenLength; i++) {
-      const nextChild = nextChildren[i];
-      const nextKey = nextChild.__key;
+      const nextKey = nextChildrenKeys[i];
+      const nextChild = $getNodeByKeyOrThrow(nextKey);
       const collabNode = collabNodeMap.get(nextKey);
 
       if (collabNode === undefined) {
@@ -177,9 +172,11 @@ export class CollabElementNode {
       } else if (collabNode._parent !== this) {
         // Moved node
         const oldParent = collabNode._parent;
-        const oldParentChildren = oldParent._children;
-        const oldIndex = oldParentChildren.indexOf(collabNode);
-        oldParentChildren.splice(oldIndex, 1);
+        if (oldParent !== null) {
+          const oldParentChildren = oldParent._children;
+          const oldIndex = oldParentChildren.indexOf(collabNode);
+          oldParentChildren.splice(oldIndex, 1);
+        }
         children.splice(i, 0, collabNode);
         collabNode._parent = this;
       }

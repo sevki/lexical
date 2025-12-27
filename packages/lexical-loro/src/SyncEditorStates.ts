@@ -7,41 +7,17 @@
  */
 
 import type {EditorState, NodeKey} from 'lexical';
-import type {LoroDoc} from 'loro-crdt';
 
 import {
   $addUpdateTag,
-  $createParagraphNode,
-  $getNodeByKey,
   $getRoot,
   $getSelection,
-  $getWritableNodeState,
   $isRangeSelection,
-  $isTextNode,
-  COLLABORATION_TAG,
-  HISTORIC_TAG,
-  SKIP_SCROLL_INTO_VIEW_TAG,
 } from 'lexical';
-import invariant from 'shared/invariant';
 
 import {Binding, Provider} from '.';
-import {AnyBinding} from './Bindings';
-import {CollabDecoratorNode} from './CollabDecoratorNode';
-import {CollabElementNode} from './CollabElementNode';
-import {CollabTextNode} from './CollabTextNode';
-import {
-  $syncLocalCursorPosition,
-  syncCursorPositions,
-  SyncCursorPositionsFn,
-  syncLexicalSelectionToLoro,
-} from './SyncCursors';
-import {
-  $getOrInitCollabNodeFromSharedType,
-  $moveSelectionToPreviousNode,
-  doesSelectionNeedRecovering,
-  getNodeTypeFromSharedType,
-  syncWithTransaction,
-} from './Utils';
+import {syncLexicalSelectionToLoro} from './SyncCursors';
+import {syncWithTransaction} from './Utils';
 
 export function syncLexicalUpdateToLoro(
   binding: Binding,
@@ -58,7 +34,11 @@ export function syncLexicalUpdateToLoro(
       currEditorState.read(() => {
         const root = $getRoot();
         const collabRoot = binding.root;
-        collabRoot.syncChildrenFromLexical(binding, root, prevEditorState._nodeMap);
+        collabRoot.syncChildrenFromLexical(
+          binding,
+          root,
+          prevEditorState._nodeMap,
+        );
         const selection = $getSelection();
 
         if ($isRangeSelection(selection)) {

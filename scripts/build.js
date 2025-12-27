@@ -119,6 +119,7 @@ const thirdPartyExternals = [
   'react-dom',
   'yjs',
   'y-websocket',
+  'loro-crdt',
   'happy-dom',
   'jsdom',
   ...(isWWW

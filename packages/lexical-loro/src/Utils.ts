@@ -7,20 +7,17 @@
  */
 
 import type {BaseBinding, Binding} from '.';
-import type {LoroText, LoroMap} from 'loro-crdt';
+import type {LoroMap, LoroText} from 'loro-crdt';
 
 import {
   $getNodeByKey,
-  $getRoot,
   $getWritableNodeState,
   $isDecoratorNode,
   $isElementNode,
   $isLineBreakNode,
   $isRootNode,
   $isTextNode,
-  createEditor,
   DecoratorNode,
-  EditorState,
   ElementNode,
   LexicalNode,
   NodeKey,
@@ -29,7 +26,6 @@ import {
 } from 'lexical';
 import invariant from 'shared/invariant';
 
-import {isBindingV1} from './Bindings';
 import {
   $createCollabDecoratorNode,
   CollabDecoratorNode,
@@ -208,7 +204,7 @@ export function $syncPropertiesFromLoro(
   for (const property in properties) {
     if (keysChanged === null || keysChanged.has(property)) {
       let sharedValue;
-      
+
       if ('get' in sharedType && typeof sharedType.get === 'function') {
         sharedValue = (sharedType as LoroMap).get(property);
       }
@@ -297,21 +293,20 @@ export function createLexicalNodeFromCollabNode(
 ): LexicalNode {
   const type = collabNode.getType();
   const editor = binding.editor;
-  let lexicalNode;
 
   const registeredNodes = editor._nodes;
   const nodeInfo = registeredNodes.get(type);
-  
+
   invariant(nodeInfo !== undefined, 'Node %s not registered in editor', type);
 
-  lexicalNode = new nodeInfo.klass();
+  const lexicalNode = new nodeInfo.klass();
   lexicalNode.__key = collabNode._key;
   lexicalNode.__parent = parentKey;
 
   return lexicalNode;
 }
 
-export function doesSelectionNeedRecovering(
+export function $doesSelectionNeedRecovering(
   selection: null | RangeSelection,
 ): boolean {
   if (selection === null) {
@@ -325,6 +320,8 @@ export function doesSelectionNeedRecovering(
     $getNodeByKey(anchor.key) === null || $getNodeByKey(focus.key) === null
   );
 }
+/** @deprecated renamed to {@link $doesSelectionNeedRecovering} by @lexical/eslint-plugin rules-of-lexical */
+export const doesSelectionNeedRecovering = $doesSelectionNeedRecovering;
 
 export function $moveSelectionToPreviousNode(
   nodeToRemove: ElementNode | TextNode | DecoratorNode<unknown>,
@@ -341,8 +338,9 @@ export function $moveSelectionToPreviousNode(
 }
 
 export function syncWithTransaction(binding: Binding, fn: () => void): void {
-  const doc = binding.doc;
-  binding.doc.transact(fn);
+  // Loro doesn't use explicit transactions in the same way as Yjs
+  // Just execute the function directly
+  fn();
 }
 
 export function getNodeTypeFromSharedType(

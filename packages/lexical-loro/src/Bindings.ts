@@ -12,7 +12,7 @@ import type {CollabLineBreakNode} from './CollabLineBreakNode';
 import type {CollabTextNode} from './CollabTextNode';
 import type {Cursor} from './SyncCursors';
 import type {LexicalEditor, NodeKey} from 'lexical';
-import type {LoroDoc, LoroText} from 'loro-crdt';
+import type {LoroDoc} from 'loro-crdt';
 
 import {Klass, LexicalNode} from 'lexical';
 import invariant from 'shared/invariant';
