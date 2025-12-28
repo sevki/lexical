@@ -9,8 +9,9 @@
 import type {Binding, Provider} from '@lexical/loro';
 import type {JSX} from 'react';
 
-import {createBinding} from '@lexical/loro';
+import {createBinding, syncLexicalUpdateToLoro} from '@lexical/loro';
 import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
+import {$createParagraphNode, $createTextNode, $getRoot} from 'lexical';
 import {LoroDoc} from 'loro-crdt';
 import {useEffect, useMemo, useState} from 'react';
 
@@ -64,7 +65,40 @@ export function LoroCollaborationPlugin({
       return;
     }
 
-    const {provider} = collabContext;
+    const {provider, binding} = collabContext;
+
+    // Bootstrap the editor with initial content if empty
+    if (shouldBootstrap) {
+      editor.update(() => {
+        const root = $getRoot();
+        if (root.isEmpty()) {
+          const paragraph = $createParagraphNode();
+          const text = $createTextNode(
+            'Welcome to Lexical with Loro CRDT Collaboration!',
+          );
+          paragraph.append(text);
+          root.append(paragraph);
+        }
+      });
+    }
+
+    // Register update listener to sync Lexical changes to Loro
+    const removeUpdateListener = editor.registerUpdateListener(
+      ({prevEditorState, editorState, dirtyElements, dirtyLeaves, normalizedNodes, tags}) => {
+        if (!tags.has('skip-collab')) {
+          syncLexicalUpdateToLoro(
+            binding,
+            provider,
+            prevEditorState,
+            editorState,
+            dirtyElements,
+            dirtyLeaves,
+            normalizedNodes,
+            tags,
+          );
+        }
+      },
+    );
 
     if (shouldBootstrap) {
       provider.connect();
@@ -72,8 +106,9 @@ export function LoroCollaborationPlugin({
 
     return () => {
       provider.disconnect();
+      removeUpdateListener();
     };
-  }, [collabContext, shouldBootstrap]);
+  }, [collabContext, shouldBootstrap, editor]);
 
   const handleExportLoroDoc = () => {
     if (collabContext?.doc == null) {
