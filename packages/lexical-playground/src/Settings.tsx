@@ -40,6 +40,7 @@ export default function Settings(): JSX.Element {
       selectionAlwaysOnDisplay,
       isCodeHighlighted,
       isCodeShiki,
+      useLoroCollab,
     },
   } = useSettings();
   useEffect(() => {
@@ -76,6 +77,16 @@ export default function Settings(): JSX.Element {
               }}
               checked={isCollab}
               text="Collaboration"
+            />
+          )}
+          {isRichText && isDevPlayground && (
+            <Switch
+              onClick={() => {
+                setOption('useLoroCollab', !useLoroCollab);
+                window.location.reload();
+              }}
+              checked={useLoroCollab}
+              text="Loro Collaboration"
             />
           )}
           {isDevPlayground && (
