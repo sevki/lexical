@@ -11,7 +11,12 @@ import type {JSX} from 'react';
 
 import {createBinding, syncLexicalUpdateToLoro} from '@lexical/loro';
 import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
-import {$createParagraphNode, $createTextNode, $getRoot} from 'lexical';
+import {
+  $createParagraphNode,
+  $createTextNode,
+  $getRoot,
+  SKIP_COLLAB_TAG,
+} from 'lexical';
 import {LoroDoc} from 'loro-crdt';
 import {useEffect, useMemo, useState} from 'react';
 
@@ -77,7 +82,7 @@ export function LoroCollaborationPlugin({
         normalizedNodes,
         tags,
       }) => {
-        if (!tags.has('skip-collab')) {
+        if (!tags.has(SKIP_COLLAB_TAG)) {
           syncLexicalUpdateToLoro(
             binding,
             provider,
@@ -96,17 +101,22 @@ export function LoroCollaborationPlugin({
       provider.connect();
 
       // Bootstrap the editor with initial content if empty (after connect)
-      editor.update(() => {
-        const root = $getRoot();
-        if (root.isEmpty()) {
-          const paragraph = $createParagraphNode();
-          const text = $createTextNode(
-            'Welcome to Lexical with Loro CRDT Collaboration!',
-          );
-          paragraph.append(text);
-          root.append(paragraph);
-        }
-      });
+      editor.update(
+        () => {
+          const root = $getRoot();
+          if (root.isEmpty()) {
+            const paragraph = $createParagraphNode();
+            const text = $createTextNode(
+              'Welcome to Lexical with Loro CRDT Collaboration!',
+            );
+            paragraph.append(text);
+            root.append(paragraph);
+          }
+        },
+        {
+          tag: 'history-merge',
+        },
+      );
     }
 
     return () => {

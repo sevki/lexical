@@ -13,6 +13,7 @@ import {
   $getRoot,
   $getSelection,
   $isRangeSelection,
+  SKIP_COLLAB_TAG,
 } from 'lexical';
 
 import {Binding, Provider} from '.';
@@ -30,7 +31,7 @@ export function syncLexicalUpdateToLoro(
   tags: Set<string>,
 ): void {
   syncWithTransaction(binding, () => {
-    if (tags.has('skip-collab') === false) {
+    if (tags.has(SKIP_COLLAB_TAG) === false) {
       currEditorState.read(() => {
         const root = $getRoot();
         const collabRoot = binding.root;
@@ -57,7 +58,7 @@ export function syncLoroChangesToLexical(
 ): void {
   binding.editor.update(
     () => {
-      $addUpdateTag('skip-collab');
+      $addUpdateTag(SKIP_COLLAB_TAG);
       // Simplified sync - in a real implementation, this would handle
       // Loro events and update the Lexical editor state accordingly
     },
