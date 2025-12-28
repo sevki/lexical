@@ -88,7 +88,9 @@ export function createBinding(
     doc !== undefined && doc !== null,
     'createBinding: doc is null or undefined',
   );
-  const rootLoroText = doc.getText('root');
+  // Use getMap for the root container, then get text for content
+  const rootMap = doc.getMap('root');
+  const rootLoroText = rootMap.setContainer('content', 'Text');
   const root: CollabElementNode = $createCollabElementNode(
     rootLoroText,
     null,
