@@ -67,30 +67,22 @@ export function LoroCollaborationPlugin({
 
     const {provider, binding} = collabContext;
 
-    // Bootstrap the editor with initial content if empty
-    if (shouldBootstrap) {
-      editor.update(() => {
-        const root = $getRoot();
-        if (root.isEmpty()) {
-          const paragraph = $createParagraphNode();
-          const text = $createTextNode(
-            'Welcome to Lexical with Loro CRDT Collaboration!',
-          );
-          paragraph.append(text);
-          root.append(paragraph);
-        }
-      });
-    }
-
     // Register update listener to sync Lexical changes to Loro
     const removeUpdateListener = editor.registerUpdateListener(
-      ({prevEditorState, editorState, dirtyElements, dirtyLeaves, normalizedNodes, tags}) => {
+      ({
+        prevEditorState,
+        editorState: currEditorState,
+        dirtyElements,
+        dirtyLeaves,
+        normalizedNodes,
+        tags,
+      }) => {
         if (!tags.has('skip-collab')) {
           syncLexicalUpdateToLoro(
             binding,
             provider,
             prevEditorState,
-            editorState,
+            currEditorState,
             dirtyElements,
             dirtyLeaves,
             normalizedNodes,
@@ -102,6 +94,19 @@ export function LoroCollaborationPlugin({
 
     if (shouldBootstrap) {
       provider.connect();
+
+      // Bootstrap the editor with initial content if empty (after connect)
+      editor.update(() => {
+        const root = $getRoot();
+        if (root.isEmpty()) {
+          const paragraph = $createParagraphNode();
+          const text = $createTextNode(
+            'Welcome to Lexical with Loro CRDT Collaboration!',
+          );
+          paragraph.append(text);
+          root.append(paragraph);
+        }
+      });
     }
 
     return () => {
