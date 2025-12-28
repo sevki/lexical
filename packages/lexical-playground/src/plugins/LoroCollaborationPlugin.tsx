@@ -83,13 +83,14 @@ export function LoroCollaborationPlugin({
     const doc = collabContext.doc;
     // Export the Loro document as bytes
     const bytes = doc.export({mode: 'snapshot'});
-    
+
     // Create a Blob and download it
     const blob = new Blob([bytes], {type: 'application/octet-stream'});
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `loro-document-${Date.now()}.loro`;
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    link.download = `loro-document-${timestamp}.loro`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
