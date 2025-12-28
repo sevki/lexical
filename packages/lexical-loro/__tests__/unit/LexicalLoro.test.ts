@@ -9,6 +9,7 @@
 import {createEditor} from 'lexical';
 import {describe, expect, test} from 'vitest';
 
+import * as LexicalLoro from '../../src/index';
 import {createBinding} from '../../src/index';
 
 describe('LexicalLoro tests', () => {
@@ -18,19 +19,16 @@ describe('LexicalLoro tests', () => {
   });
 
   test('package exports', () => {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const loro = require('../../LexicalLoro.js');
-
-    expect(loro.createBinding).toBeDefined();
-    expect(loro.createUndoManager).toBeDefined();
-    expect(loro.initLocalState).toBeDefined();
-    expect(loro.setLocalStateFocus).toBeDefined();
-    expect(loro.syncLexicalUpdateToLoro).toBeDefined();
-    expect(loro.syncLoroChangesToLexical).toBeDefined();
-    expect(loro.syncCursorPositions).toBeDefined();
-    expect(loro.getAnchorAndFocusCollabNodesForUserState).toBeDefined();
-    expect(loro.CONNECTED_COMMAND).toBeDefined();
-    expect(loro.TOGGLE_CONNECT_COMMAND).toBeDefined();
+    expect(LexicalLoro.createBinding).toBeDefined();
+    expect(LexicalLoro.createUndoManager).toBeDefined();
+    expect(LexicalLoro.initLocalState).toBeDefined();
+    expect(LexicalLoro.setLocalStateFocus).toBeDefined();
+    expect(LexicalLoro.syncLexicalUpdateToLoro).toBeDefined();
+    expect(LexicalLoro.syncLoroChangesToLexical).toBeDefined();
+    expect(LexicalLoro.syncCursorPositions).toBeDefined();
+    expect(LexicalLoro.getAnchorAndFocusCollabNodesForUserState).toBeDefined();
+    expect(LexicalLoro.CONNECTED_COMMAND).toBeDefined();
+    expect(LexicalLoro.TOGGLE_CONNECT_COMMAND).toBeDefined();
   });
 
   test('editor can be created', () => {
