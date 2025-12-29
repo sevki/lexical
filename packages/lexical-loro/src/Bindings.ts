@@ -88,11 +88,20 @@ export function createBinding(
     doc !== undefined && doc !== null,
     'createBinding: doc is null or undefined',
   );
+  
+  // Get or create the root text container
+  // In Loro, getText creates the container if it doesn't exist
   const rootLoroText = doc.getText('root');
+  
   invariant(
     rootLoroText !== undefined && rootLoroText !== null,
-    'createBinding: doc.getText("root") returned null or undefined',
+    'createBinding: doc.getText("root") returned null or undefined. ' +
+      'Loro Doc: ' +
+      JSON.stringify({peerIdStr: doc.peerIdStr}) +
+      ', rootLoroText type: ' +
+      typeof rootLoroText,
   );
+  
   const root: CollabElementNode = $createCollabElementNode(
     rootLoroText,
     null,
