@@ -37,6 +37,7 @@ import {
   createWebsocketProvider,
   createWebsocketProviderWithDoc,
 } from './collaboration';
+import {createLoroProvider} from './collaborationLoro';
 import {useSettings} from './context/SettingsContext';
 import {useSharedHistoryContext} from './context/SharedHistoryContext';
 import ActionsPlugin from './plugins/ActionsPlugin';
@@ -64,6 +65,7 @@ import ImagesPlugin from './plugins/ImagesPlugin';
 import KeywordsPlugin from './plugins/KeywordsPlugin';
 import {LayoutPlugin} from './plugins/LayoutPlugin/LayoutPlugin';
 import LinkPlugin from './plugins/LinkPlugin';
+import {LoroCollaborationPlugin} from './plugins/LoroCollaborationPlugin';
 import MarkdownShortcutPlugin from './plugins/MarkdownShortcutPlugin';
 import {MaxLengthPlugin} from './plugins/MaxLengthPlugin';
 import MentionsPlugin from './plugins/MentionsPlugin';
@@ -99,6 +101,7 @@ export default function Editor(): JSX.Element {
       isCodeShiki,
       isCollab,
       useCollabV2,
+      useLoroCollab,
       isAutocomplete,
       isMaxLength,
       isCharLimit,
@@ -119,11 +122,12 @@ export default function Editor(): JSX.Element {
     },
   } = useSettings();
   const isEditable = useLexicalEditable();
-  const placeholder = isCollab
-    ? 'Enter some collaborative rich text...'
-    : isRichText
-      ? 'Enter some rich text...'
-      : 'Enter some plain text...';
+  const placeholder =
+    isCollab || useLoroCollab
+      ? 'Enter some collaborative rich text...'
+      : isRichText
+        ? 'Enter some rich text...'
+        : 'Enter some plain text...';
   const [floatingAnchorElem, setFloatingAnchorElem] =
     useState<HTMLDivElement | null>(null);
   const [isSmallWidthViewport, setIsSmallWidthViewport] =
@@ -197,7 +201,13 @@ export default function Editor(): JSX.Element {
         )}
         {isRichText ? (
           <>
-            {isCollab ? (
+            {useLoroCollab ? (
+              <LoroCollaborationPlugin
+                id={COLLAB_DOC_ID}
+                providerFactory={createLoroProvider}
+                shouldBootstrap={!skipCollaborationInit}
+              />
+            ) : isCollab ? (
               useCollabV2 ? (
                 <>
                   <CollabV2

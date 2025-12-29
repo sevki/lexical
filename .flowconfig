@@ -36,6 +36,7 @@ module.name_mapper='^@lexical/history$' -> '<PROJECT_ROOT>/packages/lexical-hist
 module.name_mapper='^@lexical/html$' -> '<PROJECT_ROOT>/packages/lexical-html/flow/LexicalHtml.js.flow'
 module.name_mapper='^@lexical/link$' -> '<PROJECT_ROOT>/packages/lexical-link/flow/LexicalLink.js.flow'
 module.name_mapper='^@lexical/list$' -> '<PROJECT_ROOT>/packages/lexical-list/flow/LexicalList.js.flow'
+module.name_mapper='^@lexical/loro$' -> '<PROJECT_ROOT>/packages/lexical-loro/flow/LexicalLoro.js.flow'
 module.name_mapper='^@lexical/mark$' -> '<PROJECT_ROOT>/packages/lexical-mark/flow/LexicalMark.js.flow'
 module.name_mapper='^@lexical/markdown$' -> '<PROJECT_ROOT>/packages/lexical-markdown/flow/LexicalMarkdown.js.flow'
 module.name_mapper='^@lexical/offset$' -> '<PROJECT_ROOT>/packages/lexical-offset/flow/LexicalOffset.js.flow'
@@ -107,6 +108,7 @@ munge_underscores=false
 
 [libs]
 ./libdefs/yjs.js
+./libdefs/loro-crdt.js
 ./flow-typed
 
 [strict]
