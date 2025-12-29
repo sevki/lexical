@@ -89,6 +89,10 @@ export function createBinding(
     'createBinding: doc is null or undefined',
   );
   const rootLoroText = doc.getText('root');
+  invariant(
+    rootLoroText !== undefined && rootLoroText !== null,
+    'createBinding: doc.getText("root") returned null or undefined',
+  );
   const root: CollabElementNode = $createCollabElementNode(
     rootLoroText,
     null,
