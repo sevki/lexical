@@ -12,10 +12,26 @@ import {describe, expect, it} from 'vitest';
 describe('Loro API Test', () => {
   it('doc.getText should return a valid LoroText object', () => {
     const doc = new LoroDoc();
+    console.log('Created LoroDoc, peerIdStr:', doc.peerIdStr);
+    
     const text = doc.getText('root');
+    console.log('getText returned:', text);
+    console.log('typeof text:', typeof text);
+    console.log('text constructor:', text?.constructor?.name);
+    console.log('text keys:', text ? Object.keys(text) : 'N/A');
     
     expect(text).toBeDefined();
     expect(text).not.toBeNull();
+    
+    // Log what methods/properties are actually available
+    if (text) {
+      console.log('Available methods:');
+      console.log('  - insert:', typeof text.insert);
+      console.log('  - delete:', typeof text.delete);
+      console.log('  - length:', typeof text.length);
+      console.log('  - toString:', typeof text.toString);
+    }
+    
     expect(typeof text.insert).toBe('function');
     expect(typeof text.delete).toBe('function');
     expect(typeof text.length).toBe('number');
